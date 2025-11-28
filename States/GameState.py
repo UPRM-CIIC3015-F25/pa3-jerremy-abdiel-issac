@@ -602,10 +602,10 @@ class GameState(State):
 
         suitOrder = [Suit.HEARTS, Suit.CLUBS, Suit.DIAMONDS, Suit.SPADES]
 
-        for i in range(len(self.cards)):
-            for j in range(i + 1, len(self.cards)):
-                c1 = self.cards[i]
-                c2 = self.cards[j]
+        for i in range(len(self.hand)):
+            for j in range(i + 1, len(self.hand)):
+                c1 = self.hand[i]
+                c2 = self.hand[j]
 
                 swap = False
 
@@ -614,19 +614,19 @@ class GameState(State):
                     if suitOrder.index(c1.suit) > suitOrder.index(c2.suit):
                         swap = True
 
-                    elif c1.suit == c2.suit and c1.rank > c2.rank:
+                    elif c1.suit == c2.suit and c1.rank.value > c2.rank.value:
                         swap = True
 
                 elif sort_by.lower() == "rank":
 
-                    if c1.rank > c2.rank:
+                    if c1.rank.value > c2.rank.value:
                         swap = True
 
-                    elif c1.rank == c2.rank and suitOrder.index(c1.suit) > suitOrder.index(c2.suit):
+                    elif c1.rank.value == c2.rank.value and suitOrder.index(c1.suit) > suitOrder.index(c2.suit):
                         swap = True
 
                 if swap:
-                    self.cards[i], self.cards[j] = self.cards[j], self.cards[i]
+                    self.hand[i], self.hand[j] = self.hand[j], self.hand[i]
 
         self.updateCards(400, 520, self.cards, self.hand, scale=1.2)
 
@@ -891,34 +891,28 @@ class GameState(State):
     #   update the visual layout of the player's hand.
     def discardCards(self, removeFromHand: bool):
 
-        if not self.selectedCards:
+        if not self.cardsSelectedList:
+            if len(self.hand) < 8 and self.deck:
+                self.hand.append(self.deck.pop(0))
+                self.updateCards(400, 520, self.cards, self.hand, scale=1.2)
+                self.discardCards(False)
+                return
 
-            self.drawNewCards()
-
-            self.resetSelections()
-
+            self.cardsSelectedList.clear()
+            self.cardsSelectedRect.clear()
+            self.infoText = ""
             self.updateCards(400, 520, self.cards, self.hand, scale=1.2)
-
             return
 
-        card = self.selectedCards.pop(0)
-
-        if card in self.hand:
-
-            self.hand.remove(card)
+        if removeFromHand:
+            card = self.cardsSelectedList.pop(0)
+            if card in self.hand:
+                try:
+                    self.hand.remove(card)
+                except ValueError:
+                    pass
+            self.used.append(card)
 
         self.updateCards(400, 520, self.cards, self.hand, scale=1.2)
 
         self.discardCards(removeFromHand)
-
-def drawNewCards(self):
-
-    while len(self.hand) < 5:
-
-        self.hand.append(self.cards.draw())
-
-def resetSelections(self):
-
-    self.selectedCards = []
-
-    self.selectionText = ""
