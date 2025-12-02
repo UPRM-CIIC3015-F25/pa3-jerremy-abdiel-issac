@@ -853,6 +853,44 @@ class GameState(State):
         #       # Apply that Joker’s effect
         #       self.activated_jokers.add("joker card name")
         #   The last line ensures the Joker is visibly active and its effects are properly applied.
+        if "The Joker" in owned:
+            hand_mult += 4
+            self.activated_jokers.add("The Joker")
+        if "Micheal Myers" in owned:
+            hand_mult += random.randint(0, 23)
+            self.activated_jokers.add("Micheal Myers")
+        if "Fibonacci" in owned:
+            if Rank(2, 3, 5, 8, 14) in owned:
+                hand_mult += 8
+            self.activated_jokers.add("Fibonacci")
+        if "Gauntlet" in owned:
+            total_chips += 250 and self.playerInfo.amountOfHands - 2
+            self.activated_jokers.add("Gauntlet")
+        if "Ogre" in owned:
+            for self.jokerDeck in hand_name:
+                hand_mult += 3
+            self.activated_jokers.add("Ogre")
+        if "Straw Hat" in owned:
+            (total_chips + 100) - (5 * self.playerInfo.amountOfHands)
+            self.activated_jokers.add("Straw Hat")
+        if "Hog Rider" in owned:
+            if hand_name == "Straight":
+                total_chips += 100
+            self.activated_jokers.add("Hog Rider")
+        if "? Block" in owned:
+            if self.playedHandName == 4:
+                total_chips += 4
+            self.activated_jokers.add("Block")
+        if "Hogwarts" in owned:
+            for ACE in self.playedHandName:
+                total_chips += 20
+                hand_mult += 4
+            self.activated_jokers.add("Hogwarts")
+        if "802" in owned:
+            if self.playerInfo.amountOfHands == 0:
+                self.playerInfo.amountOfHands * 2
+            self.activated_jokers.add("802")
+
 
         procrastinate = False
 
