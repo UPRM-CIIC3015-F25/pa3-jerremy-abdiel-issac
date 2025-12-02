@@ -1,6 +1,8 @@
 import pygame
 import random
 import os
+
+from Cards import Planets
 from Cards.Planets import PLANETS, PlanetCard
 from Cards.Jokers import Jokers
 from States.GameState import HAND_SCORES
@@ -98,7 +100,29 @@ class ShopState(State):
     #   containing its "chips", "multiplier", and "level" fields.
     #   Remember: the Sun upgrades all hands, while other planets upgrade only their specific one.
     def activatePlanet(self, planet):
-        keys = HAND_SCORES.keys()
+        HAND_SCORES = {
+            "High Card": {"chips": 5, "multiplier": 1, "level": 1},
+            "One Pair": {"chips": 10, "multiplier": 2, "level": 1},
+            "Two Pair": {"chips": 20, "multiplier": 2, "level": 1},
+            "Three of a Kind": {"chips": 30, "multiplier": 3, "level": 1},
+            "Straight": {"chips": 40, "multiplier": 4, "level": 1},
+            "Flush": {"chips": 50, "multiplier": 4, "level": 1},
+            "Full House": {"chips": 60, "multiplier": 5, "level": 1},
+            "Four of a Kind": {"chips": 80, "multiplier": 7, "level": 1},
+            "Straight Flush": {"chips": 100, "multiplier": 8, "level": 1},
+        }
+        if planet == "Sun":
+            for hand_name in HAND_SCORES:
+                HAND_SCORES[hand_name]["chips"] += PLANETS["Sun"].chips
+                HAND_SCORES[hand_name]["multiplier"] += PLANETS["Sun"].multiplier
+                HAND_SCORES[hand_name]["level"] += 1
+        else:
+            for hand_name in HAND_SCORES:
+                if planet.find(hand_name) != -1:
+                    HAND_SCORES[hand_name]["level"] += 1
+                    HAND_SCORES[hand_name]["multiplier"] += PLANETS[hand_name].multiplier
+                    HAND_SCORES[hand_name]["chips"] += Planets[hand_name].chips
+                    break
 
     # ---------- Helpers ----------
     def _wrap_lines(self, text, font, max_width):
