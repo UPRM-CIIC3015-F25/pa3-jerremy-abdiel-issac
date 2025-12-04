@@ -548,7 +548,7 @@ class GameState(State):
 
         if stage == 3:
             print(totalBonus + base_gold)
-            return totalBonus + base_gold
+            return round(totalBonus + base_gold)
 
         else:
             if stage == 0:
