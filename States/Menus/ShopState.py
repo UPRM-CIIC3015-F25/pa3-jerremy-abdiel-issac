@@ -99,7 +99,8 @@ class ShopState(State):
     #   Each key should be the name of a hand (e.g., "Two Pair", "Straight"), and each value should be a dictionary
     #   containing its "chips", "multiplier", and "level" fields.
     #   Remember: the Sun upgrades all hands, while other planets upgrade only their specific one.
-    def activatePlanet(self, planet):
+
+    def activatePlanet(self, planet_obj):
         HAND_SCORES = {
             "High Card": {"chips": 5, "multiplier": 1, "level": 1},
             "One Pair": {"chips": 10, "multiplier": 2, "level": 1},
@@ -111,19 +112,20 @@ class ShopState(State):
             "Four of a Kind": {"chips": 80, "multiplier": 7, "level": 1},
             "Straight Flush": {"chips": 100, "multiplier": 8, "level": 1},
         }
-        if planet == "Sun":
-            for hand_name in HAND_SCORES:
-                HAND_SCORES[hand_name]["chips"] += PLANETS["Sun"].chips
-                HAND_SCORES[hand_name]["multiplier"] += PLANETS["Sun"].multiplier
-                HAND_SCORES[hand_name]["level"] += 1
-        else:
-            for hand_name in HAND_SCORES:
-                if planet.find(hand_name) != -1:
-                    HAND_SCORES[hand_name]["level"] += 1
-                    HAND_SCORES[hand_name]["multiplier"] += PLANETS[hand_name].multiplier
-                    HAND_SCORES[hand_name]["chips"] += Planets[hand_name].chips
-                    break
+        planet_name = planet_obj.name
+        planet = PLANETS[planet_name]
 
+        if planet == "Sun":
+            for hand in HAND_SCORES:
+                HAND_SCORES[hand]["chips"] += PLANETS["Sun"].chips
+                HAND_SCORES[hand]["multiplier"] += PLANETS["Sun"].mult
+                HAND_SCORES[hand]["level"] += 1
+            return
+        hand_name = planet.hand
+
+        HAND_SCORES[hand_name]["chips"] += planet.chips
+        HAND_SCORES[hand_name]["multiplier"] += planet.mult
+        HAND_SCORES[hand_name]["level"] += 1
     # ---------- Helpers ----------
     def _wrap_lines(self, text, font, max_width):
         words = text.split()
