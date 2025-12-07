@@ -843,9 +843,9 @@ class GameState(State):
             self.activated_jokers.add("Micheal Myers")
 
         if "Fibonacci" in owned:
-            fib_values = {1, 2, 3, 5, 8,}
-            count = sum(1 for c in self.playedHandName if c.value in fib_values)
-            hand_mult += 8
+            fib_values = {1, 2, 3, 5, 8}
+            if fib_values in owned:
+                hand_mult += 8
             self.activated_jokers.add("Fibonacci")
 
         if "Gauntlet" in owned:
@@ -869,12 +869,12 @@ class GameState(State):
         if "? Block" in owned:
             if len(self.playedHandName) == 4:
                 total_chips += 4
-            self.activated_jokers.add("Block")
+            self.activated_jokers.add("? Block")
 
         if "Hogwarts" in owned:
-            aces = sum(1 for c in self.playedHandName if c.value == 1)
-            total_chips += aces * 20
-            hand_mult += aces * 4
+            if "Ace" in self.playedHandName:
+                total_chips *= 20
+                hand_mult *= 4
             self.activated_jokers.add("Hogwarts")
 
         if "802" in owned:
