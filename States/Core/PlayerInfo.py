@@ -1,4 +1,6 @@
 import pygame
+pygame.init()
+pygame.font.init()
 from States.Core.StateClass import State
 from Levels.LevelManager import LevelManager
 

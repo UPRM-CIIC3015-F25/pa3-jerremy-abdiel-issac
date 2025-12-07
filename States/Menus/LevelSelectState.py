@@ -83,24 +83,37 @@ class LevelSelectState(State):
                     self.nextState = "GameWinState"
                     return
 
-                # If there's a next sublevel, set it as current
-                lm.curSubLevel = nxt
                 # TODO (TASK 9.2) - Adjust player limits and reset values based on the current Boss Blind.
                 #   Implement conditional logic that modifies the player's hand and discard limits depending
                 #   on which boss is active.
                 #   Finally, make sure to reset the player’s round score to 0 at the end of this setup.
                 #   Avoid unnecessary repetition—use clear condition structure to make the logic readable.
+
+                # If there's a next sublevel, set it as current
+                lm.curSubLevel = nxt
+                boss = lm.curSubLevel.bossLevel
+
+                self.playerInfo.handLimit = self.playerInfo.amountOfHands
+                self.playerInfo.discardLimit = self.playerInfo.amountOfDiscards
+
+                if boss == "The Needle":
+                    self.playerInfo.handLimit = 1
+                elif boss == "The Water":
+                    self.playerInfo.amountOfDiscards = 0
+                elif boss == "The Manacle":
+                    self.playerInfo.handLimit = max(1, self.playerInfo.handLimit - 1)
+                elif boss == "The Hook":
+                    self.playerInfo.randomDiscardAfterHand = 2
+                elif boss == "Mark":
+                    self.playerInfo.faceCardsHidden = True
+
                 self.playerInfo.roundScore = 0
-                
-                # Set target score for the new sublevel
-                self.playerInfo.score = self.playerInfo.levelManager.curSubLevel.score
-                
-                # Prepare for the nextState : GameState
+                self.playerInfo.score = lm.curSubLevel.score
+
                 self.deckManager.resetDeck = True
                 self.isFinished = True
                 self.nextState = "GameState"
                 self.buttonSound.play()
-
     def drawLevelCards(self):
         # Make sure there's a current level
         if self.playerInfo.levelManager.curLevel is None:
@@ -116,7 +129,12 @@ class LevelSelectState(State):
         #   what unique restriction or ability that boss applies during the round.
         #   This dictionary will later be used to look up and apply special effects based on which boss is active.
         boss_abilities = {
-
+            "The Mark": "All Face cards are drawn face down",
+            "The Needle": "Play only 1 hand",
+            "The House": "First hand is drawn face down",
+            "The Hook": "Discards 2 random cards held in hand after every played hand",
+            "The Water": "Start with 0 discards",
+            "The Manacle": "-1 hand size",
         }
 
         # Dict of boss with their color schemes
