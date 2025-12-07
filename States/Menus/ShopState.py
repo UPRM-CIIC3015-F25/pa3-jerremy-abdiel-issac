@@ -115,7 +115,7 @@ class ShopState(State):
         planet_name = planet_obj.name
         planet = PLANETS[planet_name]
 
-        if planet == "Sun":
+        if planet_name == "Sun":
             for hand in HAND_SCORES:
                 HAND_SCORES[hand]["chips"] += PLANETS["Sun"].chips
                 HAND_SCORES[hand]["multiplier"] += PLANETS["Sun"].mult
